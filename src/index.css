@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a1020;
+  --color-wine: #72233e;
+  --color-rose: #e8a0b4;
+  --color-cream: #faf7f2;
+  --color-gold: #f4c77b;
+  --color-sky: #7ba7ff;
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-ink);
+  scroll-behavior: smooth;
+  /* Le scroll vertical de la page pilote le défilement horizontal : on masque sa barre
+     et on aligne l'arrêt sur chaque section */
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-cream);
+  background: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Défilement vertical interne d'une section, sans barre visible */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.glass {
+  background: rgb(250 247 242 / 0.07);
+  border: 1px solid rgb(250 247 242 / 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Curseur global de transparence (comme le slider de Liquid Glass dans iOS 27) :
+   0 = verre parfaitement clair, 1 = légèrement teinté, 2 = plus opaque */
+:root {
+  --lg-tint: 1;
+}
+
+@layer components {
+  .liquid-glass,
+  .liquid-lens {
+    --lg-blur: 3px;
+    --lg-sat: 1.8;
+    --lg-bright: 1.08;
+    --lg-contrast: 1;
+    position: relative;
+    isolation: isolate;
+    border: none;
+    background:
+      linear-gradient(
+        135deg,
+        rgb(255 255 255 / 0.1),
+        rgb(255 255 255 / 0.01) 40%,
+        rgb(255 255 255 / 0.06)
+      ),
+      rgb(8 12 28 / calc(0.12 * var(--lg-tint)));
+    backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat))
+      brightness(var(--lg-bright)) contrast(var(--lg-contrast));
+    -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat))
+      brightness(var(--lg-bright)) contrast(var(--lg-contrast));
+    box-shadow:
+      0 18px 40px rgb(0 0 0 / 0.22),
+      0 4px 10px rgb(0 0 0 / 0.14),
+      inset 0 1px 0 rgb(255 255 255 / 0.5),
+      inset 0 -1px 0 rgb(255 255 255 / 0.16),
+      inset 0 0 0 1px rgb(255 255 255 / 0.07),
+      inset 0 0 28px rgb(255 255 255 / 0.08);
+  }
+
+  /* Lentille de sélection (segmented control) : plus claire, plus brillante,
+     elle devient presque transparente et plus lumineuse quand on la presse */
+  .liquid-lens {
+    --lg-blur: 0.5px;
+    --lg-sat: 1.9;
+    --lg-bright: 1.16;
+    background:
+      linear-gradient(
+        135deg,
+        rgb(255 255 255 / 0.24),
+        rgb(255 255 255 / 0.03) 45%,
+        rgb(255 255 255 / 0.16)
+      ),
+      rgb(255 255 255 / 0.04);
+    box-shadow:
+      0 10px 26px rgb(0 0 0 / 0.26),
+      0 2px 6px rgb(0 0 0 / 0.18),
+      inset 0 1.5px 0 rgb(255 255 255 / 0.75),
+      inset 0 -1.5px 0 rgb(255 255 255 / 0.28),
+      inset 0 0 0 1px rgb(255 255 255 / 0.12),
+      inset 0 0 18px rgb(255 255 255 / 0.14);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .liquid-lens[data-pressed="true"] {
+    --lg-blur: 0px;
+    --lg-sat: 2.1;
+    --lg-bright: 1.26;
+    box-shadow:
+      0 20px 44px rgb(0 0 0 / 0.34),
+      0 4px 10px rgb(0 0 0 / 0.2),
+      inset 0 2px 0 rgb(255 255 255 / 0.9),
+      inset 0 -2px 0 rgb(255 255 255 / 0.4),
+      inset 0 0 0 1px rgb(255 255 255 / 0.18),
+      inset 0 0 26px rgb(255 255 255 / 0.2);
+  }
+
+  /* Lentille claire (barre de tâches façon WhatsApp iOS 27) : une bulle de verre lumineuse
+     passe sur l'icône, qui devient foncée. La teinte claire est dessinée SOUS l'icône (couche
+     séparée dans SocialBar) ; cette couche du dessus ne fait que la réfraction, le liseré
+     lumineux et les reflets. */
+  .liquid-lens--clear {
+    --lg-blur: 0.5px;
+    --lg-sat: 1.2;
+    --lg-bright: 1;
+    --lg-contrast: 1.08;
+    background:
+      linear-gradient(
+        135deg,
+        rgb(255 255 255 / 0.22),
+        rgb(255 255 255 / 0) 50%,
+        rgb(255 255 255 / 0.14)
+      ),
+      rgb(255 255 255 / 0.03);
+    box-shadow:
+      0 8px 22px rgb(0 0 0 / 0.28),
+      0 2px 6px rgb(0 0 0 / 0.18),
+      inset 0 1.5px 0 rgb(255 255 255 / 0.85),
+      inset 0 -1.5px 0 rgb(255 255 255 / 0.3),
+      inset 0 0 0 1px rgb(255 255 255 / 0.14),
+      inset 0 0 14px rgb(255 255 255 / 0.18);
+  }
+
+  .liquid-lens--clear[data-pressed="true"] {
+    box-shadow:
+      0 16px 36px rgb(0 0 0 / 0.36),
+      0 4px 10px rgb(0 0 0 / 0.22),
+      inset 0 2px 0 rgb(255 255 255 / 0.95),
+      inset 0 -2px 0 rgb(255 255 255 / 0.4),
+      inset 0 0 0 1px rgb(255 255 255 / 0.2),
+      inset 0 0 22px rgb(255 255 255 / 0.22);
+  }
+
+  /* Liseré lumineux : accroche la lumière en haut à gauche et en bas à droite */
+  .liquid-glass::before,
+  .liquid-lens::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 1) 0%,
+      rgb(255 255 255 / 0.3) 18%,
+      rgb(255 255 255 / 0.03) 46%,
+      rgb(255 255 255 / 0.03) 56%,
+      rgb(255 255 255 / 0.32) 82%,
+      rgb(255 255 255 / 0.95) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Reflets doux + lueur qui suit le curseur (variables --mx / --my posées par GlassEngine) */
+  .liquid-glass::after,
+  .liquid-lens::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        160px circle at var(--mx, -100px) var(--my, -100px),
+        rgb(255 255 255 / 0.26),
+        transparent 70%
+      ),
+      radial-gradient(
+        130% 90% at 15% -10%,
+        rgb(255 255 255 / 0.28),
+        transparent 46%
+      ),
+      radial-gradient(
+        110% 80% at 90% 115%,
+        rgb(255 255 255 / 0.16),
+        transparent 42%
+      );
+  }
+}
+
+/* Réglage système « réduire la transparence » : verre plus opaque, sans flou ni réfraction */
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass,
+  .liquid-lens {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgb(22 30 56 / 0.88);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sky);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
