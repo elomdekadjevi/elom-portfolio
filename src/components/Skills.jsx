@@ -43,18 +43,6 @@ const families = [
       "Des applications mobiles fluides, construites avec une seule base de code.",
     skills: ["React Native", "Expo", "Node.js"],
   },
-  {
-    name: "IA & Cybersécurité",
-    tag: "IA",
-    intro:
-      "Rendre les systèmes plus intelligents et protéger leurs communications.",
-    skills: [
-      "AI / ML",
-      "Sécurité des communications IoT",
-      "False Data Injection",
-      "Attaque / défense",
-    ],
-  },
 ];
 
 const pad = (n) => String(n + 1).padStart(2, "0");

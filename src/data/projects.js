@@ -69,7 +69,7 @@ export const projects = [
     tech: ["Laravel", "PHP", "JavaScript", "MySQL"],
     role: "",
     links: [],
-    cover: "public/projects/e-cash/e-cash.jpg",
+    cover: "projects/e-cash/e-cash.jpg",
     images: [],
   },
   {
@@ -85,7 +85,7 @@ export const projects = [
     tech: ["React", "Vite", "JavaScript", "CSS", "Responsive Design"],
     role: "",
     links: [],
-    cover: "public/projects/da-digit-all/da-digit-all.jpg",
+    cover: "projects/da-digit-all/da-digit-all.jpg",
     images: [],
   },
   {
@@ -101,7 +101,7 @@ export const projects = [
     tech: [], // à compléter selon la stack réellement utilisée
     role: "",
     links: [],
-    cover: "public/projects/elenami/elenami.jpg",
+    cover: "projects/elenami/elenami.jpg",
     images: [],
   },
   {
@@ -117,8 +117,8 @@ export const projects = [
     tech: ["ESP32", "C/C++", "Arduino", "RFID", "Sensors", "Embedded Systems"],
     role: "",
     links: [],
-    cover: "public/projects/homesync/homesync-interface.png",
+    cover: "projects/homesync/cover.jpg",
     images: [],
-    maquette: "public/projects/homesync/homesync-maquette.jpg", // ou .mp4 / .webm pour une vidéo
+    maquette: "projects/homesync/maquette.jpg", // ou .mp4 / .webm pour une vidéo
   },
 ];
