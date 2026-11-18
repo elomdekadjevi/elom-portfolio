@@ -69,7 +69,7 @@ export const projects = [
     tech: ["Laravel", "PHP", "JavaScript", "MySQL"],
     role: "",
     links: [],
-    cover: "projects/e-cash/e-cash.jpg",
+    cover: "projects/e-cash/cover.jpg",
     images: [],
   },
   {
@@ -85,7 +85,7 @@ export const projects = [
     tech: ["React", "Vite", "JavaScript", "CSS", "Responsive Design"],
     role: "",
     links: [],
-    cover: "projects/da-digit-all/da-digit-all.jpg",
+    cover: "projects/da-digit-all/cover.jpg",
     images: [],
   },
   {
@@ -101,7 +101,7 @@ export const projects = [
     tech: [], // à compléter selon la stack réellement utilisée
     role: "",
     links: [],
-    cover: "projects/elenami/elenami.jpg",
+    cover: "projects/elenami/cover.jpg",
     images: [],
   },
   {
