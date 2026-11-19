@@ -12,6 +12,7 @@ const cls = "h-5 w-5";
 const socials = [
   {
     label: "GitHub",
+    color: "#ffffff",
     href: "https://github.com/elomdekadjevi",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
@@ -21,6 +22,7 @@ const socials = [
   },
   {
     label: "LinkedIn",
+    color: "#3B9BF0",
     href: "https://www.linkedin.com/in/elom-dekadjevi-691897411/",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
@@ -30,6 +32,7 @@ const socials = [
   },
   {
     label: "WhatsApp",
+    color: "#25D366",
     href: "https://wa.me/2290142084196",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
@@ -39,6 +42,7 @@ const socials = [
   },
   {
     label: "Email",
+    color: "#EA4335",
     href: "mailto:pierredekadjevi@gmail.com",
     svg: (
       <svg
@@ -65,7 +69,8 @@ const lensSpring = { stiffness: 420, damping: 30, mass: 0.7 };
  * - une lentille de verre foncée suit le pointeur d'icône en icône (aucune zone morte),
  *   avec une légère attraction magnétique, s'étire dans son déplacement et « pop » à l'apparition ;
  * - quand on appuie, elle grossit, l'icône s'agrandit et des franges colorées apparaissent ;
- * - un libellé en verre sort à gauche de l'icône survolée.
+ * - un libellé en verre sort à gauche de l'icône survolée ;
+ * - l'icône survolée prend la couleur de son réseau.
  */
 export default function SocialBar() {
   const reduce = useReducedMotion();
@@ -174,7 +179,7 @@ export default function SocialBar() {
           className="liquid-glass absolute inset-0 rounded-full"
         />
 
-        {socials.map(({ label, href, svg }, index) => {
+        {socials.map(({ label, href, svg, color }, index) => {
           const external = href.startsWith("http");
           const lit = active === index;
           return (
@@ -192,7 +197,8 @@ export default function SocialBar() {
               <motion.span
                 animate={{ scale: lit ? (pressed ? 1.28 : 1.12) : 1 }}
                 transition={{ type: "spring", stiffness: 500, damping: 28 }}
-                className={`transition-colors duration-200 ${lit ? "text-white" : "text-cream/75"}`}
+                style={{ color: lit ? color : undefined }}
+                className="text-cream/75 transition-colors duration-200"
               >
                 {svg}
               </motion.span>
