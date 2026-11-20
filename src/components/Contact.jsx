@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-
+import VisitorCounter from "./VisitorCounter";
 const ease = [0.22, 1, 0.36, 1];
 
 // ✏️ À remplacer par tes vraies coordonnées
@@ -114,7 +114,7 @@ export default function Contact() {
             Un projet IoT, une application web ou mobile ? Écris-moi, je te
             réponds dès que possible.
           </p>
-
+         
           <ul className="mt-8 space-y-4">
             {rows.map(({ label, value, href, icon }) => {
               const body = (

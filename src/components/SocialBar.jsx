@@ -12,7 +12,7 @@ const cls = "h-5 w-5";
 const socials = [
   {
     label: "GitHub",
-    color: "#ffffff",
+    color: "#181717",
     href: "https://github.com/elomdekadjevi",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
@@ -22,7 +22,7 @@ const socials = [
   },
   {
     label: "LinkedIn",
-    color: "#3B9BF0",
+    color: "#0A66C2",
     href: "https://www.linkedin.com/in/elom-dekadjevi-691897411/",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
@@ -66,11 +66,12 @@ const lensSpring = { stiffness: 420, damping: 30, mass: 0.7 };
 
 /**
  * Barre sociale façon barre de tâches de WhatsApp sur iOS 27 :
- * - une lentille de verre foncée suit le pointeur d'icône en icône (aucune zone morte),
+ * - une lentille de verre claire suit le pointeur d'icône en icône (aucune zone morte),
  *   avec une légère attraction magnétique, s'étire dans son déplacement et « pop » à l'apparition ;
- * - quand on appuie, elle grossit, l'icône s'agrandit et des franges colorées apparaissent ;
- * - un libellé en verre sort à gauche de l'icône survolée ;
- * - l'icône survolée prend la couleur de son réseau.
+ * - sous l'icône survolée, un disque pâle teinté de la couleur de la marque est dessiné
+ *   (couche séparée, sous l'icône) ; l'icône prend la couleur pleine de son réseau ;
+ * - quand on appuie, la lentille grossit, l'icône s'agrandit et des franges colorées apparaissent ;
+ * - un libellé en verre sort à gauche de l'icône survolée.
  */
 export default function SocialBar() {
   const reduce = useReducedMotion();
@@ -194,11 +195,27 @@ export default function SocialBar() {
               onPointerDown={handleDown}
               className="relative z-10 grid h-11 w-11 place-items-center rounded-full outline-none"
             >
+              {/* disque pâle teinté de la couleur de la marque, sous l'icône */}
+              <motion.span
+                aria-hidden="true"
+                initial={false}
+                animate={{
+                  opacity: lit ? 1 : 0,
+                  scale: lit ? (pressed ? 1.12 : 1) : 0.85,
+                }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                style={{
+                  background: `color-mix(in srgb, ${color} 18%, white)`,
+                }}
+                className="absolute inset-0 rounded-full"
+              />
+
+              {/* l'icône prend la couleur pleine de la marque au survol */}
               <motion.span
                 animate={{ scale: lit ? (pressed ? 1.28 : 1.12) : 1 }}
                 transition={{ type: "spring", stiffness: 500, damping: 28 }}
                 style={{ color: lit ? color : undefined }}
-                className="text-cream/75 transition-colors duration-200"
+                className="relative text-cream/75 transition-colors duration-200"
               >
                 {svg}
               </motion.span>
@@ -217,12 +234,12 @@ export default function SocialBar() {
           );
         })}
 
-        {/* la lentille foncée, au-dessus des icônes */}
+        {/* la lentille de verre claire, au-dessus des icônes */}
         <motion.div
           aria-hidden="true"
           data-pressed={pressed}
           data-lg-dispersion=""
-          className="liquid-lens liquid-lens--dark pointer-events-none absolute left-2 top-0 z-20 h-11 w-11 rounded-full"
+          className="liquid-lens liquid-lens--clear pointer-events-none absolute left-2 top-0 z-20 h-11 w-11 rounded-full"
           style={{ x: lensX, y: lensY, opacity: lensOpacity, scaleX, scaleY }}
         />
       </div>

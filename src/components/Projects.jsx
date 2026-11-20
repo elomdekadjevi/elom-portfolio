@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { filters, projects } from "../data/projects";
 import GlassSegmented from "./GlassSegmented";
+import { BoardCard } from "./BoardCard";
 
 // Motif du visuel de repli (tant qu'aucune image n'est fournie)
 const motifBySlug = {
@@ -364,6 +365,134 @@ function Art({ project, index, motif: motifProp, slice }) {
             ))}
           </g>
         )}
+
+        {motif === "dash" && (
+          <g>
+            <motion.rect
+              x="50"
+              y="110"
+              width="300"
+              height="280"
+              rx="16"
+              {...line}
+              {...draw()}
+            />
+            <line
+              x1="50"
+              y1="150"
+              x2="350"
+              y2="150"
+              stroke="var(--color-sky)"
+              strokeOpacity="0.4"
+            />
+            {[70, 86, 102].map((cx) => (
+              <circle
+                key={cx}
+                cx={cx}
+                cy="130"
+                r="4"
+                fill="var(--color-sky)"
+                fillOpacity="0.7"
+              />
+            ))}
+            <motion.rect
+              x="62"
+              y="162"
+              width="46"
+              height="216"
+              rx="10"
+              fill="var(--color-cream)"
+              fillOpacity="0.1"
+              stroke="none"
+              {...pop(0.2)}
+            />
+            {[178, 200, 222].map((y, i) => (
+              <motion.rect
+                key={y}
+                x="72"
+                y={y}
+                width="26"
+                height="8"
+                rx="4"
+                fill="var(--color-cream)"
+                fillOpacity={i === 0 ? 0.7 : 0.3}
+                stroke="none"
+                {...pop(0.3 + i * 0.08)}
+              />
+            ))}
+            {[0, 1, 2].map((i) => (
+              <g key={i}>
+                <motion.rect
+                  x={120 + i * 74}
+                  y="162"
+                  width="66"
+                  height="56"
+                  rx="10"
+                  fill="var(--color-sky)"
+                  fillOpacity="0.2"
+                  stroke="none"
+                  {...pop(0.35 + i * 0.1)}
+                />
+                <rect
+                  x={130 + i * 74}
+                  y="174"
+                  width="30"
+                  height="6"
+                  rx="3"
+                  fill="var(--color-cream)"
+                  fillOpacity="0.6"
+                />
+                <rect
+                  x={130 + i * 74}
+                  y="190"
+                  width="42"
+                  height="12"
+                  rx="4"
+                  fill="var(--color-cream)"
+                  fillOpacity="0.9"
+                />
+              </g>
+            ))}
+            <motion.rect
+              x="120"
+              y="232"
+              width="222"
+              height="100"
+              rx="10"
+              fill="var(--color-cream)"
+              fillOpacity="0.08"
+              stroke="none"
+              {...pop(0.6)}
+            />
+            <motion.path
+              d="M132 316 L160 292 L188 304 L216 268 L244 284 L272 252 L300 270 L330 246"
+              {...line}
+              {...draw(0.8)}
+            />
+            {[0, 1].map((i) => (
+              <g key={i}>
+                <motion.rect
+                  x={120 + i * 112}
+                  y="344"
+                  width="104"
+                  height="26"
+                  rx="13"
+                  fill="var(--color-cream)"
+                  fillOpacity="0.12"
+                  stroke="none"
+                  {...pop(0.9 + i * 0.1)}
+                />
+                <circle
+                  cx={120 + i * 112 + (i ? 28 : 78)}
+                  cy="357"
+                  r="9"
+                  fill="var(--color-sky)"
+                />
+              </g>
+            ))}
+          </g>
+        )}
+
         {motif === "app" && (
           <g>
             <motion.circle
@@ -975,18 +1104,18 @@ const deg = (r) => (r * 180) / Math.PI;
 function FanTile({ p, i, pos, geo, active, onSelect }) {
   const { R, step, tw, th, bw, bh, pw, dw } = geo;
   const hasPhone = p.devices?.includes("phone");
+  const hasBoard = p.devices?.includes("board");
+  const bdw = Math.max(128, bw * 0.28); // largeur de la carte
   const hasMaquette = Boolean(p.maquette);
-  const hasDevice = hasPhone || hasMaquette;
+  const hasDevice = hasPhone || hasBoard || hasMaquette;
   const idx = projects.indexOf(p);
 
   // Taille du cadre maquette : respecte le ratio et ne dépasse pas la fenêtre
   const mRatio = p.maquetteRatio ?? 4 / 3; // largeur / hauteur
   const mh = Math.min(dw / mRatio, bh * 0.72);
   const mw = mh * mRatio;
-  // Si le projet a aussi un téléphone, la maquette se place à sa gauche
-  const maquetteRight = bw * 0.04 + (hasPhone ? pw + 14 : 0);
-  const sideW =
-    (hasPhone ? pw + (hasMaquette ? 14 : 0) : 0) + (hasMaquette ? mw : 0);
+  // Si le projet a aussi un téléphone, la maquette / la carte se place à sa gauche
+  const sideRight = bw * 0.04 + (hasPhone ? pw + 14 : 0);
 
   // h : progression du survol (0 → 1), animée au ressort
   const h = useSpring(0, { stiffness: 220, damping: 22, mass: 0.8 });
@@ -1031,10 +1160,14 @@ function FanTile({ p, i, pos, geo, active, onSelect }) {
     [0, 1],
     ["rgba(250,247,242,0.2)", "rgba(123,167,255,0.7)"],
   );
-  const textPad = useTransform(h, [0, 1], [20, hasDevice ? sideW + 44 : 20]);
+  const sideW = (hasPhone ? pw + 24 : 0) + (hasBoard ? bdw + 24 : 0);
+  const textPad = useTransform(h, [0, 1], [20, sideW ? sideW + 20 : 20]);
   const phoneScale = useTransform(h, [0.3, 1], [0.6, 1]);
   const phoneY = useTransform(h, [0, 1], [60, 0]);
   const phoneRotate = useTransform(h, [0, 1], [8, 0]);
+  const boardScale = useTransform(h, [0.3, 1], [0.6, 1]);
+  const boardY = useTransform(h, [0, 1], [60, 0]);
+  const boardRotate = useTransform(h, [0, 1], [-8, 0]);
   const maquetteRotate = useTransform(h, [0, 1], [-6, 0]);
 
   let host = `projets/${p.slug}`;
@@ -1108,7 +1241,11 @@ function FanTile({ p, i, pos, geo, active, onSelect }) {
             <Cover project={p} index={idx} />
             {hasDevice && !p.cover && (
               <motion.div style={{ opacity: h }} className="absolute inset-0">
-                <Cover project={p} index={idx} motif="web" />
+                <Cover
+                  project={p}
+                  index={idx}
+                  motif={hasBoard ? "dash" : "web"}
+                />
               </motion.div>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/20 to-transparent" />
@@ -1155,12 +1292,13 @@ function FanTile({ p, i, pos, geo, active, onSelect }) {
           </motion.div>
         </motion.div>
 
+        {/* iPhone : sort de l'écran au survol */}
         {hasPhone && (
           <motion.div
             aria-hidden="true"
             style={{
               width: pw,
-              height: pw * 2.12,
+              height: pw * 2.1,
               opacity: h,
               scale: phoneScale,
               y: phoneY,
@@ -1182,6 +1320,26 @@ function FanTile({ p, i, pos, geo, active, onSelect }) {
           </motion.div>
         )}
 
+        {/* Carte (tableau de bord) : à gauche du téléphone s'il y en a un */}
+        {hasBoard && (
+          <motion.div
+            aria-hidden="true"
+            style={{
+              width: bdw,
+              height: bdw * 0.72,
+              opacity: h,
+              scale: boardScale,
+              y: boardY,
+              rotate: boardRotate,
+              right: sideRight,
+              transformOrigin: "50% 100%",
+            }}
+            className="pointer-events-none absolute -bottom-3 z-30"
+          >
+            <BoardCard project={p} width={bdw} />
+          </motion.div>
+        )}
+
         {hasMaquette && (
           <motion.div
             aria-hidden="true"
@@ -1192,7 +1350,7 @@ function FanTile({ p, i, pos, geo, active, onSelect }) {
               scale: phoneScale,
               y: phoneY,
               rotate: maquetteRotate,
-              right: maquetteRight,
+              right: sideRight,
               transformOrigin: "50% 100%",
             }}
             className="pointer-events-none absolute -bottom-3 z-30"
